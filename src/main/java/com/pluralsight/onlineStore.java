@@ -14,6 +14,7 @@ public class onlineStore {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT);
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern(TIME_FORMAT);
 
+
     public static void main(String[] args) {
         loadTransactions(FILE_NAME);
         Scanner scanner = new Scanner(System.in);
@@ -50,6 +51,9 @@ public class onlineStore {
 
         scanner.close();
     }
+
+//    Potential Methds
+
 
     public static void loadTransactions(String fileName) {
         // This method should load transactions from a file with the given file name.
