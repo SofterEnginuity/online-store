@@ -68,13 +68,6 @@ import java.util.Scanner;
                 e.printStackTrace();
             }
 
-
-            // This method should read a CSV file with product information and
-            // populate the inventory ArrayList with com.pluralsight.Product objects. Each line
-            // of the CSV file contains product information in the following format:
-            // id,name,price
-            // where id is a unique string identifier, name is the product name,
-            // price is a double value representing the price of the product
         }
 
         public static void displayProducts(ArrayList<Product> inventory, ArrayList<Product> cart, Scanner scanner) {
@@ -82,22 +75,22 @@ import java.util.Scanner;
             for (Product product : inventory) {
                 System.out.println(product);
             }
-            System.out.println("Please enter the id of an item to add it to your cart");
-            String id = scanner.nextLine();
-            boolean found = false;
-            for (Product product: inventory){
-                if (product.getId().equalsIgnoreCase(id)) {
-                    cart.add(product);
-                    System.out.println(product.getName() + " added to your cart");
-                    System.out.println("Cart size: " + cart.size());
-
-
-                    found = true;
+            while (true) {
+                System.out.println("Please enter the id of an item to add it to your cart (or type 'X' to return to the main menu):");
+                String id = scanner.nextLine();
+                if (id.equalsIgnoreCase("X")) {
                     break;
                 }
+                Product product = findProductById(id, inventory, cart, scanner);
+                if (product == null) {
+                    System.out.println("Invalid product ID. Please try again.");
+                    continue; // Go back to start of loop
+                }
+                cart.add(product);
+                System.out.println(product.getName() + " added to your cart");
+                System.out.println("Cart size: " + cart.size());
+                }
             }
-        }
-
 
         public static void displayCart(ArrayList<Product> cart, Scanner scanner, double totalAmount) {
             System.out.println("Items in your Carts:");
@@ -110,38 +103,83 @@ import java.util.Scanner;
             }
             System.out.println("Cart total: $" + total);
 
-            System.out.println("Please enter the id of an item to remove it from your cart");
-            String id = scanner.nextLine();
-            boolean found = false;
-            for (Product product: cart){
-                if (product.getId().equalsIgnoreCase(id)) {
-                    cart.remove(product);
-                    System.out.println("Removed " + product.getName() + " from your cart!") ;
-                    found = true;
-
-                }             break;
+            System.out.println("Please enter the ID of an item to remove it from your cart,");
+            System.out.println("or enter 'C' to check out, or 'R' to return to the products menu:");
+            String input = scanner.nextLine().trim();
+            if (input.equalsIgnoreCase("C")) {
+                checkOut(cart, 0);  // Assuming totalAmount is recalculated inside checkOut
+                return;
+            } else if (input.equalsIgnoreCase("R")) {
+                return;
+            } else {
+                boolean found = false;
+                for (Product product : cart) {
+                    if (product.getId().equalsIgnoreCase(input)) {
+                        cart.remove(product);
+                        System.out.println("Removed " + product.getName() + " from your cart!");
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    System.out.println("Item with ID '" + input + "' not found in your cart.");
+                }
             }
+
         }
 
         public static void checkOut(ArrayList<Product> cart, double totalAmount) {
+            Scanner scanner = new Scanner(System.in);
             System.out.println("Checkout Items");
+            totalAmount = 0;
             for (Product product : cart) {
                 System.out.println(product);
                 totalAmount += product.getPrice();
             }
-//            "Cart total: " + cart.totalAmount()
-            // This method should calculate the total cost of all items in the cart,
-            // and display a summary of the purchase to the user. The method should
-            // prompt the user to confirm the purchase, and calculate change and clear the cart
-            // if they confirm.
+            System.out.printf("Cart total: $%.2f%n", totalAmount);
+
+            System.out.println("Would you like to confirm this purchase?");
+            System.out.println("Please Select 'Y' for Yes, and 'N' for No.");
+
+            String confirm = scanner.nextLine();
+            if (confirm.equalsIgnoreCase("y")) {
+                boolean paid = false;
+                while (!paid) {
+                    System.out.println("Enter cash amount:");
+                    double cash = scanner.nextDouble();
+                    scanner.nextLine(); // clear newline
+
+                    if (cash >= totalAmount) {
+                        double change = cash - totalAmount;
+                        System.out.printf("Payment successful. Your change is $%.2f%n", change);
+                        cart.clear();
+                        paid = true;
+                    } else {
+                        System.out.println("Insufficient funds. Try again or type 'cancel' to return.");
+                        System.out.println("Select any key to try again or type 'X' to cancel checkout.");
+                        String choice = scanner.nextLine();
+                        if (choice.equalsIgnoreCase("X")) {
+                            System.out.println("Checkout canceled. Returning to main menu.");
+                            break;
+                        }
+                    }
+                }
+            } else if (confirm.equalsIgnoreCase("no")) {
+                System.out.println("Returning to main menu.");
+            } else {
+                System.out.println("Invalid selection.");
+            }
         }
 
-        public static Product findProductById(String id, ArrayList<Product> inventory) {
-            // This method should search the inventory ArrayList for a product with
-            // the specified ID, and return the corresponding com.pluralsight.Product object. If
-            // no product with the specified ID is found, the method should return
-            // null.
+        public static Product findProductById(String id, ArrayList<Product> inventory, ArrayList<Product> cart, Scanner scanner) {
+            for (Product product : inventory) {
+                if (product.getId().equalsIgnoreCase(id)) {
+                    return product;
+                }
+            }
             return null;
         }
-    }
+     }
+
+
 
