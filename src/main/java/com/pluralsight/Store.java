@@ -88,32 +88,48 @@ import java.util.Scanner;
             for (Product product: inventory){
                 if (product.getId().equalsIgnoreCase(id)) {
                     cart.add(product);
-                    System.out.println("Added to cart: " + product.getName());
+                    System.out.println(product.getName() + " added to your cart");
+                    System.out.println("Cart size: " + cart.size());
+
+
                     found = true;
                     break;
                 }
             }
-
         }
-            // and prompt the user to add items to their cart. The method should
-            // prompt the user to enter the ID of the product they want to add to
-            // their cart. The method should
-            // add the selected product to the cart ArrayList.
 
 
         public static void displayCart(ArrayList<Product> cart, Scanner scanner, double totalAmount) {
-           for (Product product: cart){
+            System.out.println("Items in your Carts:");
+            for (Product product : cart) {
+                System.out.println(product);
+            }
+            double total = 0.0;
+            for (Product product : cart) {
+                total += product.getPrice();
+            }
+            System.out.println("Cart total: $" + total);
 
-               System.out.println();
-           }
-            // This method should display the items in the cart ArrayList, along
-            // with the total cost of all items in the cart. The method should
-            // prompt the user to remove items from their cart by entering the ID
-            // of the product they want to remove. The method should update the cart ArrayList and totalAmount
-            // variable accordingly.
+            System.out.println("Please enter the id of an item to remove it from your cart");
+            String id = scanner.nextLine();
+            boolean found = false;
+            for (Product product: cart){
+                if (product.getId().equalsIgnoreCase(id)) {
+                    cart.remove(product);
+                    System.out.println("Removed " + product.getName() + " from your cart!") ;
+                    found = true;
+
+                }             break;
+            }
         }
 
         public static void checkOut(ArrayList<Product> cart, double totalAmount) {
+            System.out.println("Checkout Items");
+            for (Product product : cart) {
+                System.out.println(product);
+                totalAmount += product.getPrice();
+            }
+//            "Cart total: " + cart.totalAmount()
             // This method should calculate the total cost of all items in the cart,
             // and display a summary of the purchase to the user. The method should
             // prompt the user to confirm the purchase, and calculate change and clear the cart
