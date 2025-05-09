@@ -28,16 +28,12 @@ import java.util.Scanner;
 
                 choice = scanner.nextInt();
                 scanner.nextLine();
-
-                // Call the appropriate method based on user choice
                 switch (choice) {
                     case 1:
-                        System.out.println("thanks for choosing to display all");
-//                        System.out.println();
                         displayProducts(inventory, cart, scanner);
                         break;
                     case 2:
-                        System.out.println("Here is your cart");
+                        System.out.println("Your cart");
                         displayCart(cart, scanner, totalAmount);
                         break;
                     case 3:
@@ -84,7 +80,7 @@ import java.util.Scanner;
                 Product product = findProductById(id, inventory, cart, scanner);
                 if (product == null) {
                     System.out.println("Invalid product ID. Please try again.");
-                    continue; // Go back to start of loop
+                    continue;
                 }
                 cart.add(product);
                 System.out.println(product.getName() + " added to your cart");
@@ -107,7 +103,7 @@ import java.util.Scanner;
             System.out.println("or enter 'C' to check out, or 'R' to return to the products menu:");
             String input = scanner.nextLine().trim();
             if (input.equalsIgnoreCase("C")) {
-                checkOut(cart, 0);  // Assuming totalAmount is recalculated inside checkOut
+                checkOut(cart, 0);
                 return;
             } else if (input.equalsIgnoreCase("R")) {
                 return;
